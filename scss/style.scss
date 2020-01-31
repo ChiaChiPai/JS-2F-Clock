@@ -1,0 +1,41 @@
+@import 'cssreset';
+
+.wrap{
+    background-color: #293B29;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.clock{
+    background-image: url('../imges/clock-bg.svg');
+    width: 500px;
+    height: 500px;
+    position: relative;
+}
+
+.hour{
+    position: absolute;
+    left: 245px;
+    top: 243.5px;
+    // transform: rotate(360deg);
+    transform-origin:4px 4px;
+}
+
+.minute{
+    position: absolute;
+    left: 245px;
+    top:243.5px;
+    transform-origin:4px 4px;
+    // transform: rotate(180deg)
+}
+
+.second{
+    position: absolute;
+    left: 243px;
+    top:247px;
+    transform-origin:6.525px 0px;
+    // transform: rotate(0deg)
+}
+
