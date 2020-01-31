@@ -1,37 +1,65 @@
-## Welcome to GitHub Pages
+# JS地下城 2F 時鐘
+![Image](https://cdn-images-1.medium.com/max/1200/1*TevTdLDt56MiSy22wI2geQ.png)
 
-You can use the [editor on GitHub](https://github.com/ChiaChiPai/JS-2F-Clock/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+一開始看到這個圖，我以為我要寫CSS寫到瘋了。還好佛心老師有附圖檔阿。
+一開始在想要怎麼讓時針轉，那時有想到transform: rotate()，但時鐘必須以末端為基準點。
+上網找了一下，原來有 transform-origin:(X,Y)這個語法，可以去標出物件使用物件的哪裡作為中心點去旋轉，如果標示transform-origin:(0,0);就會從物件的左上角為中心點。
+時針和分針的中心點是一個半圓，我要抓到剛好在半圓的中間，於是我抓了transform-origin:4px 4px;，但秒針我不太會抓，試了到最後是transform-
+origin:6.525px 0px;這個數值跑起來最整齊。
+```css
+.hour{
+position: absolute;
+left: 245px;
+top:243.5px;
+transform-origin:4px 4px;
+}
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
+.minute{
+position: absolute;
+left: 245px;
+top:243.5px;
+transform-origin:4px 4px;
+}
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+.second{
+position: absolute;
+left: 243px;
+top:247px;
+transform-origin:6.525px 0px;
+}
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
-### Jekyll Themes
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/ChiaChiPai/JS-2F-Clock/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
 
-### Support or Contact
+---
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+##Javascript
+嘗試方向，
+先使用 let dt = new Date();取得現在時間，
+再將每個時間點定出各自的位置。
+一秒一格的角度: 360/60 = 6 deg
+- 秒針的位置 = 現在秒數*6 deg
+- 分針的位置 = 現在分鐘*6 deg + 現在秒數*6 deg(一分鐘的角度)/60
+- 時針的位置 = 現在鐘頭*30deg(一個鐘頭的角度) + (30deg/60)
+
+
+讓函式一秒執行一次，將callback函式 setTimeout('timeGet()',1000);放進去timeGet中。讓他一秒就回call一次。
+
+```javascript
+function timeGet(){
+let dt = new Date();
+let hour = dt.getHours();
+let min = dt.getMinutes();
+let sec = dt.getSeconds();
+let secDis = 180+sec*6;
+let minDis = 180+min*6+(30/5/60*sec);
+let hourDis = -90+hour*30+(30/60*min);
+document.querySelector('.js-second').setAttribute('style','transform: rotate('+secDis+'deg);');
+document.querySelector('.js-minute').setAttribute('style','transform: rotate('+minDis+'deg);');
+document.querySelector('.js-hour').setAttribute('style','transform: rotate('+hourDis+'deg);');
+setTimeout('timeGet()',1000);
+}
+timeGet();
+```
